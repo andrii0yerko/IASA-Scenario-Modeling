@@ -8,7 +8,7 @@ from st_aggrid.grid_options_builder import GridOptionsBuilder
 
 # Press the green button in the gutter to run the script.
 from database import FilmsDB
-from models import EmbeddingSearch
+from models import EmbeddingSearch, KNN_Marker
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s", force=True)
 
