@@ -1,4 +1,6 @@
 import logging
+from typing import List
+
 from recordtype import recordtype
 from pathlib import Path
 
@@ -24,7 +26,7 @@ class EmbeddingSearch:
         self.indexes = indexes
 
     @classmethod
-    def from_texts(cls, inputs: list[str], embedder: callable):
+    def from_texts(cls, inputs: List[str], embedder: callable):
         _vectors = cls._create_db(inputs, embedder)
         return cls(np.array(_vectors), embedder)
 
@@ -50,7 +52,7 @@ class EmbeddingSearch:
         return indexes, result
 
     @staticmethod
-    def _create_db(inputs: list[str], embedder):
+    def _create_db(inputs: List[str], embedder):
         logging.debug("creating db")
         result = []
         total = len(inputs)
@@ -65,7 +67,7 @@ class EmbeddingSearch:
     def from_pickle(self, path):
         pass
 
-    def get_closest(self, query: str, n: int = 1000) -> list[dict]:
+    def get_closest(self, query: str, n: int = 1000) -> List[dict]:
         query_vec = self.embedder(query)
         dist = pairwise_distances(query_vec[None, ...], self._vectors, "cosine")
         dist = dist.ravel()
@@ -82,7 +84,7 @@ class EmbeddingSearch:
 
         return SearchResult(result, query_vec)
 
-    def get_rerank(self, labeling: list[dict]):
+    def get_rerank(self, labeling: List[dict]):
         pass
 
     @property
