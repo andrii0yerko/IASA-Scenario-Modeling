@@ -73,13 +73,11 @@ class EmbeddingSearch:
 
         if self.indexes is not None:
             result = [{"id": self.indexes[_id],
-                       "distance": dist,
-                       "relevance": None}
+                       "distance": dist}
                       for _id, dist in zip(idx, dist[idx])]
         else:
             result = [{"id": _id,
-                       "distance": dist,
-                       "relevance": None}
+                       "distance": dist}
                       for _id, dist in zip(idx, dist[idx])]
 
         return SearchResult(result, query_vec)
@@ -112,23 +110,23 @@ class KNN_Marker:
         marked_ids = [-1]
         unmarked_ids = []
 
-        for result in results.result:
+        for index, result in results.result.iterrows():
             if embeddings.indexes is not None:
-                _id = embeddings.indexes.index(result["id"])
+                _id = list(embeddings.indexes).index(result["_id"])
             else:
-                _id = result["id"]
+                _id = result["_id"]
             embedding = embeddings.vectors[_id]
             if result["relevance"] is None:
                 keywords_embeddings_unmarked.append(embedding)
-                unmarked_ids.append(result["id"])
+                unmarked_ids.append(result["_id"])
             elif result["relevance"]:
                 keywords_embeddings_marked.append(embedding)
                 marked_values.append(1)
-                marked_ids.append(result["id"])
+                marked_ids.append(result["_id"])
             elif not result["relevance"]:
                 keywords_embeddings_marked.append(embedding)
                 marked_values.append(0)
-                marked_ids.append(result["id"])
+                marked_ids.append(result["_id"])
 
         data = {
             "train": KNN_Data(np.array(keywords_embeddings_marked), np.array(marked_values), marked_ids),
@@ -145,18 +143,18 @@ class KNN_Marker:
 
     @staticmethod
     def _results_update(data: dict, results: SearchResult, embeddings: EmbeddingSearch) -> SearchResult:
-        for result in results.result:
+        for ind, result in results.result.iterrows():
             if embeddings.indexes is not None:
-                _id = embeddings.indexes.index(result["id"])
+                _id = list(embeddings.indexes).index(result["_id"])
             else:
-                _id = result["id"]
+                _id = result["_id"]
 
             if result["relevance"] is not None:
                 continue
 
-            index = data["test"].ids.index(result["id"])
+            index = data["test"].ids.index(result["_id"])
             relevance = data["test"].y[index]
-            result["relevance"] = bool(relevance)
+            results.result.at[ind, "relevance"] = bool(relevance)
         return results
 
     def knn_marker(self, results: SearchResult, embeddings: EmbeddingSearch) -> SearchResult:
