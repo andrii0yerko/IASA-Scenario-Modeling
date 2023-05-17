@@ -14,7 +14,13 @@ class FilmsDB:
         return self.collection.find({}, {'_id': 1, 'keywords': 1})
 
     def get_by_ids(self, indexes):
-        return self.collection.find({"_id": {"$in": list(map(lambda x: ObjectId(x), indexes))}})
+        id_to_index = {ObjectId(x): i for i, x in enumerate(indexes)}
+        documents = self.collection.find({"_id": {"$in": list(map(ObjectId, indexes))}})
+
+        # Sort the documents based on the original order of IDs
+        sorted_documents = sorted(documents, key=lambda doc: id_to_index[doc["_id"]])
+
+        return sorted_documents
 
     def count_all(self):
         return self.collection.count_documents({})
