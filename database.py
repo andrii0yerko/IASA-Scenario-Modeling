@@ -1,7 +1,7 @@
 import pymongo
 from bson import ObjectId
 
-URL = "mongodb://filmsearcher:Qgf3KWPTqlLW76Te7ghm2nZfknyVqSQLQtviuGjgD1l8nYQqcVfh0H9lHN7SWhNxeNtmaZoHmPxDACDb5RwYIQ==@filmsearcher.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@filmsearcher@"
+URL = "mongodb://streamlit:8z1jvVFHVuH3pipFJOUX87sNa10nSKIpSYyg2H1FHqRKVNGyvO4HQoaidQEyKj3zK87NWqsX7YZaACDbzZT85w==@streamlit.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@streamlit@"
 
 
 class FilmsDB:
